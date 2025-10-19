@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 
@@ -9,6 +10,8 @@ import (
 	"github.com/fujidaiti/poppo-press/backend/internal/httpserver"
 )
 
+// main loads configuration, initializes the database (migrate and seed), and
+// starts the HTTP server with health and version endpoints.
 func main() {
 	cfg := config.Load()
 	database, err := db.Open(cfg.DBPath)
@@ -16,6 +19,13 @@ func main() {
 		log.Fatal(err)
 	}
 	defer database.Close()
+
+	if err := db.Migrate(context.Background(), database); err != nil {
+		log.Fatal(err)
+	}
+	if err := db.SeedAdminIfEmpty(context.Background(), database); err != nil {
+		log.Fatal(err)
+	}
 
 	srv := httpserver.New()
 	log.Printf("listening on %s", cfg.HTTPAddr)

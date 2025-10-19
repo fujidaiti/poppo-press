@@ -1,3 +1,5 @@
+// Package config loads runtime configuration from a YAML file and environment
+// variables, applying precedence env > file > defaults.
 package config
 
 import (
@@ -7,6 +9,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// Config holds runtime configuration for the server and scheduler.
+// Fields are mapped from YAML keys and can be overridden by environment vars.
 type Config struct {
 	HTTPAddr    string `yaml:"http_addr"`
 	DBPath      string `yaml:"db_path"`
@@ -14,7 +18,8 @@ type Config struct {
 	PublishTime string `yaml:"publish_time"`
 }
 
-// Load applies precedence: env > file > defaults.
+// Load returns a Config by merging defaults, a YAML config file, and
+// environment variables with precedence: env > file > defaults.
 func Load() Config {
 	cfg := fromFile()
 	// defaults
@@ -47,6 +52,8 @@ func Load() Config {
 	return cfg
 }
 
+// fromFile reads configuration from a YAML file path resolved from PP_CONFIG
+// or the default location under ~/.config/poppo-press/config.yaml.
 func fromFile() Config {
 	var cfg Config
 	path := os.Getenv("PP_CONFIG")

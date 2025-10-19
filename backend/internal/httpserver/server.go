@@ -1,3 +1,5 @@
+// Package httpserver provides the HTTP mux and common middleware for the API
+// server, including simple health and version endpoints.
 package httpserver
 
 import (
@@ -10,10 +12,15 @@ import (
 	"github.com/fujidaiti/poppo-press/backend/internal/version"
 )
 
+// Server wraps a chi router that exposes core service endpoints and middleware.
+// It is responsible for wiring health and version routes and returning the
+// http.Handler used by the HTTP server.
 type Server struct {
 	mux *chi.Mux
 }
 
+// New constructs a Server with standard middleware (RealIP, RequestID, Logger,
+// Recoverer) and registers the /health and /version endpoints.
 func New() *Server {
 	r := chi.NewRouter()
 	r.Use(middleware.RealIP)
@@ -39,4 +46,5 @@ func New() *Server {
 	return &Server{mux: r}
 }
 
+// Handler returns the underlying http.Handler to serve requests.
 func (s *Server) Handler() http.Handler { return s.mux }

@@ -1,3 +1,5 @@
+// Package db provides database initialization, migrations, and helpers for the
+// SQLite-backed storage layer.
 package db
 
 import (
@@ -8,6 +10,8 @@ import (
 	_ "modernc.org/sqlite"
 )
 
+// Open opens a SQLite database at the given path, enables WAL and pragmatic
+// PRAGMA settings, and configures conservative connection limits.
 func Open(path string) (*sql.DB, error) {
 	dsn := path + "?_busy_timeout=5000&_fk=1"
 	database, err := sql.Open("sqlite", dsn)
@@ -31,6 +35,7 @@ func Open(path string) (*sql.DB, error) {
 	return database, nil
 }
 
+// pragma executes the provided PRAGMA statement against the given database.
 func pragma(ctx context.Context, db *sql.DB, stmt string) error {
 	_, err := db.ExecContext(ctx, stmt)
 	return err
