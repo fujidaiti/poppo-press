@@ -6,18 +6,25 @@ Backend-first plan to deliver the Go API server before the CLI.
 
 ### M0 — Project bootstrap
 
-- [ ] Initialize Go module and baseline layout (`cmd/server`, `internal/...`)
-- [ ] Add dependencies: `chi`, `gofeed`, SQLite driver, password hashing, scheduler
-- [ ] Configuration via env + file (timezone, publish time, DB path, HTTP addr)
+- [x] Initialize Go module and baseline layout (`backend/cmd/server`, `backend/internal/...`)
+– Add dependencies:
+  - [x] `chi`
+  - [x] SQLite driver (`modernc.org/sqlite`)
+  - [ ] `gofeed`
+  - [ ] password hashing (argon2id)
+  - [ ] scheduler (cron)
+– Configuration:
+  - [x] env (HTTP addr, DB path)
+  - [x] file (timezone, publish time)
 - [ ] Makefile or task runner; lint config; basic CI stub
-- [ ] Health endpoint; version/build info endpoint
+- [x] Health endpoint; version/build info endpoint
 
 Definition of Done: server starts; config loads; SQLite file writable.
 
 ### M1 — Database and migrations
 
 - [ ] Implement schema from `docs/data-model.md` using SQL migrations
-- [ ] Enable WAL and pragmatic PRAGMA settings at startup
+- [x] Enable WAL and pragmatic PRAGMA settings at startup
 - [ ] Seed single user if none exists
 
 Definition of Done: migration tool runs repeatably; schema version tracked.
