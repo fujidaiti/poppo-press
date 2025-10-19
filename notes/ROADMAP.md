@@ -31,10 +31,10 @@ Definition of Done: migration tool runs repeatably; schema version tracked.
 
 ### M2 — Auth and devices
 
-- [ ] Password hashing (argon2id preferred) and admin bootstrap
-- [ ] POST `/v1/auth/login` issues device-scoped token; store only token hash
-- [ ] Auth middleware validates `Authorization: Bearer` tokens
-- [ ] POST `/v1/auth/logout` revokes current token
+- [x] Password hashing (argon2id preferred) and admin bootstrap
+- [x] POST `/v1/auth/login` issues device-scoped token; store only token hash
+- [x] Auth middleware validates `Authorization: Bearer` tokens
+- [x] POST `/v1/auth/logout` revokes current token
 
 Definition of Done: protected test route accessible only with valid token.
 

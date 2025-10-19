@@ -27,7 +27,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	srv := httpserver.New()
+	srv := httpserver.New(database)
 	log.Printf("listening on %s", cfg.HTTPAddr)
 	if err := http.ListenAndServe(cfg.HTTPAddr, srv.Handler()); err != nil {
 		log.Fatal(err)
