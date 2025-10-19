@@ -69,7 +69,7 @@ Definition of Done: read state reflected in listings and detail.
 
 ### M7 — Read later
 
-- [ ] GET/POST/DELETE `/v1/read-later`
+- [x] GET/POST/DELETE `/v1/read-later`
 
 Definition of Done: bookmarking works; duplicates prevented.
 

@@ -110,6 +110,9 @@ func New(database *sql.DB) *Server {
 
 		// M6 Articles API
 		registerArticleRoutes(database, r)
+
+		// M7 Read Later API
+		registerReadLaterRoutes(database, r)
 	})
 
 	return &Server{mux: r, db: database}

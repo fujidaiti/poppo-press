@@ -41,6 +41,7 @@ Base URL: `/v1`
 - GET `/read-later` → `[ article ]`
 - POST `/read-later/{id}` → `204`
 - DELETE `/read-later/{id}` → `204`
+  - Idempotent add; duplicates prevented.
 
 ## Devices
 
