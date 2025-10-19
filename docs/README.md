@@ -17,8 +17,23 @@ This directory is the entry point for product and technical documentation.
 7. [Deployment](deployment.md) — binary, config, systemd, backups, Docker
 8. [Security](security.md) — auth, device tokens, storage, transport
 
+### API Viewer
+
+- Redoc: open `redoc.html` in a browser to view the API docs rendered from `openapi.yaml`.
+
 ### At-a-glance scope
 
 - Single-user, self-hosted server with CLI clients
 - SQLite storage (WAL), hourly feed polling; daily edition assembly
 - Authentication with device-scoped tokens; multi-device support
+
+### Instructions
+
+- View docs:
+  - Start here (this file), then follow the suggested order above.
+  - API docs: open `redoc.html` or serve locally and open `http://localhost:8000/docs/redoc.html`.
+    - Example: `python3 -m http.server 8000` from repo root.
+- Update API:
+  - Edit `openapi.yaml`, then refresh Redoc.
+- Roadmap:
+  - See `../notes/ROADMAP.md` for backend-first milestones and DoD.

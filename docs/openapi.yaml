@@ -1,0 +1,512 @@
+openapi: 3.1.0
+info:
+  title: Poppo Press API
+  version: 0.1.0
+  description: Single-user, self-hosted RSS reader API with hourly polling and daily editions.
+servers:
+  - url: http://localhost:8080
+    description: Local development
+security:
+  - bearerAuth: []
+tags:
+  - name: Auth
+  - name: Sources
+  - name: Editions
+  - name: Articles
+  - name: ReadLater
+  - name: Devices
+paths:
+  /v1/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login and issue a device-scoped token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+  /v1/auth/logout:
+    post:
+      tags: [Auth]
+      summary: Revoke the current device token
+      responses:
+        "204":
+          description: No Content
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/sources:
+    get:
+      tags: [Sources]
+      summary: List sources
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Source"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags: [Sources]
+      summary: Add a new source
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSourceRequest"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Source"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/sources/{id}:
+    delete:
+      tags: [Sources]
+      summary: Delete a source
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /v1/editions:
+    get:
+      tags: [Editions]
+      summary: List editions
+      parameters:
+        - $ref: "#/components/parameters/Page"
+        - $ref: "#/components/parameters/PageSize"
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Total-Count:
+              description: Total number of items available
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EditionSummary"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/editions/{id}:
+    get:
+      tags: [Editions]
+      summary: Get an edition with its articles
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Edition"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /v1/articles:
+    get:
+      tags: [Articles]
+      summary: List articles
+      parameters:
+        - name: editionId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sourceId
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: readState
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [read, unread, all]
+            default: all
+        - name: q
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Total-Count:
+              description: Total number of items available
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Article"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/articles/{id}:
+    get:
+      tags: [Articles]
+      summary: Get article detail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Article"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /v1/articles/{id}/read:
+    post:
+      tags: [Articles]
+      summary: Mark an article read or unread for this device
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReadToggleRequest"
+      responses:
+        "204":
+          description: No Content
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /v1/read-later:
+    get:
+      tags: [ReadLater]
+      summary: List read-later articles
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Total-Count:
+              description: Total number of items available
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Article"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/read-later/{id}:
+    post:
+      tags: [ReadLater]
+      summary: Add an article to read-later
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [ReadLater]
+      summary: Remove an article from read-later
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /v1/devices:
+    get:
+      tags: [Devices]
+      summary: List devices
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Device"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /v1/devices/{id}:
+    delete:
+      tags: [Devices]
+      summary: Revoke a device
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer
+  parameters:
+    Page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PageSize:
+      name: pageSize
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    TooManyRequests:
+      description: Too Many Requests
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              nullable: true
+          required: [code, message]
+      required: [error]
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+        deviceName:
+          type: string
+      required: [username, password, deviceName]
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        deviceId:
+          type: string
+      required: [token, deviceId]
+    CreateSourceRequest:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+      required: [url]
+    Source:
+      type: object
+      properties:
+        id:
+          type: string
+        url:
+          type: string
+          format: uri
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, url, title, createdAt]
+    EditionSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        localDate:
+          type: string
+          format: date
+        publishedAt:
+          type: string
+          format: date-time
+        articleCount:
+          type: integer
+      required: [id, localDate, publishedAt, articleCount]
+    Edition:
+      type: object
+      properties:
+        id:
+          type: string
+        localDate:
+          type: string
+          format: date
+        publishedAt:
+          type: string
+          format: date-time
+        articles:
+          type: array
+          items:
+            $ref: "#/components/schemas/EditionArticle"
+      required: [id, localDate, publishedAt, articles]
+    EditionArticle:
+      type: object
+      properties:
+        position:
+          type: integer
+        article:
+          $ref: "#/components/schemas/Article"
+      required: [position, article]
+    Article:
+      type: object
+      properties:
+        id:
+          type: string
+        sourceId:
+          type: string
+        canonicalUrl:
+          type: string
+          format: uri
+        title:
+          type: string
+        summary:
+          type: string
+        content:
+          type: string
+        author:
+          type: string
+        publishedAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        isRead:
+          type: boolean
+        isBookmarked:
+          type: boolean
+      required: [id, sourceId, canonicalUrl, title, publishedAt]
+    Device:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        lastSeenAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+      required: [id, name, createdAt]
+    ReadToggleRequest:
+      type: object
+      properties:
+        isRead:
+          type: boolean
+      required: [isRead]
