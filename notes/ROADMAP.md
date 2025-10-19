@@ -10,9 +10,9 @@ Backend-first plan to deliver the Go API server before the CLI.
 – Add dependencies:
   - [x] `chi`
   - [x] SQLite driver (`modernc.org/sqlite`)
-  - [ ] `gofeed`
-  - [ ] password hashing (argon2id)
-  - [ ] scheduler (cron)
+  - [x] `gofeed`
+  - [x] password hashing (argon2id)
+  - [x] scheduler (cron)
 – Configuration:
   - [x] env (HTTP addr, DB path)
   - [x] file (timezone, publish time)
@@ -23,9 +23,9 @@ Definition of Done: server starts; config loads; SQLite file writable.
 
 ### M1 — Database and migrations
 
-- [ ] Implement schema from `docs/data-model.md` using SQL migrations
+- [x] Implement schema from `docs/data-model.md` using SQL migrations
 - [x] Enable WAL and pragmatic PRAGMA settings at startup
-- [ ] Seed single user if none exists
+- [x] Seed single user if none exists
 
 Definition of Done: migration tool runs repeatably; schema version tracked.
 
