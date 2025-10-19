@@ -62,8 +62,8 @@ Definition of Done: GET `/v1/editions` shows the day’s edition and counts.
 
 ### M6 — Articles and read state
 
-- [ ] GET `/v1/articles` with filters; GET `/v1/articles/{id}` detail
-- [ ] POST `/v1/articles/{id}/read` toggles device read; derive global read
+- [x] GET `/v1/articles` with filters; GET `/v1/articles/{id}` detail
+- [x] POST `/v1/articles/{id}/read` toggles device read; derive global read
 
 Definition of Done: read state reflected in listings and detail.
 

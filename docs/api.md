@@ -34,6 +34,7 @@ Base URL: `/v1`
 - GET `/articles` Query: `editionId?, sourceId?, readState?, q?`
 - GET `/articles/{id}` → article detail
 - POST `/articles/{id}/read` Body: `{ isRead: boolean }` → `204`
+  - `readState` filter: `read | unread | all` (default: `all`)
 
 ## Read Later
 
