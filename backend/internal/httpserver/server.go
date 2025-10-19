@@ -101,6 +101,9 @@ func New(database *sql.DB) *Server {
 			w.Header().Set("Content-Type", "application/json")
 			_ = json.NewEncoder(w).Encode(map[string]string{"pong": "ok"})
 		})
+
+		// M3 Sources API
+		registerSourcesRoutes(database, r)
 	})
 
 	return &Server{mux: r, db: database}

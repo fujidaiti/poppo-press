@@ -40,8 +40,8 @@ Definition of Done: protected test route accessible only with valid token.
 
 ### M3 — Sources API
 
-- [ ] POST/GET/DELETE `/v1/sources` with URL validation
-- [ ] Initial probe fetch to verify feed; persist `etag` and `last_modified`
+- [x] POST/GET/DELETE `/v1/sources` with URL validation
+- [x] Initial probe fetch to verify feed; persist `etag` and `last_modified`
 
 Definition of Done: sources can be added, listed, removed; invalid feeds rejected.
 
