@@ -75,7 +75,7 @@ Definition of Done: bookmarking works; duplicates prevented.
 
 ### M8 — Devices management
 
-- [ ] GET `/v1/devices`; DELETE `/v1/devices/{id}` revoke
+- [x] GET `/v1/devices`; DELETE `/v1/devices/{id}` revoke
 
 Definition of Done: revoked token immediately denied.
 

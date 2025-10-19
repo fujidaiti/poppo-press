@@ -113,6 +113,9 @@ func New(database *sql.DB) *Server {
 
 		// M7 Read Later API
 		registerReadLaterRoutes(database, r)
+
+		// M8 Devices API
+		registerDeviceRoutes(database, r)
 	})
 
 	return &Server{mux: r, db: database}
