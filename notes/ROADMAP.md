@@ -47,9 +47,9 @@ Definition of Done: sources can be added, listed, removed; invalid feeds rejecte
 
 ### M4 — Fetcher and hourly polling
 
-- [ ] Hourly scheduler job; per-source conditional GET with backoff on errors
-- [ ] Parse with `gofeed`; normalize fields; upsert articles; dedupe by canonical id
-- [ ] Respect per-source rate limits and timeouts
+- [x] Hourly scheduler job; per-source conditional GET with backoff on errors
+- [x] Parse with `gofeed`; normalize fields; upsert articles; dedupe by canonical id
+- [x] Respect per-source rate limits and timeouts
 
 Definition of Done: hourly job persists new or updated items without duplicates.
 

@@ -8,6 +8,7 @@ import (
 	"github.com/fujidaiti/poppo-press/backend/internal/config"
 	"github.com/fujidaiti/poppo-press/backend/internal/db"
 	"github.com/fujidaiti/poppo-press/backend/internal/httpserver"
+	"github.com/fujidaiti/poppo-press/backend/internal/scheduler"
 )
 
 // main loads configuration, initializes the database (migrate and seed), and
@@ -28,6 +29,12 @@ func main() {
 	}
 
 	srv := httpserver.New(database)
+	// start scheduler
+	sch := scheduler.New()
+	if err := sch.HourlyFetch(database); err != nil {
+		log.Fatal(err)
+	}
+	sch.Start()
 	log.Printf("listening on %s", cfg.HTTPAddr)
 	if err := http.ListenAndServe(cfg.HTTPAddr, srv.Handler()); err != nil {
 		log.Fatal(err)

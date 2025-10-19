@@ -19,6 +19,10 @@ Base URL: `/v1`
 - POST `/sources` Body: `{ url: string }` → `201 { id }`
 - DELETE `/sources/{id}` → `204`
 
+## Scheduler
+
+- Hourly job fetches all sources (conditional GET) and persists new/updated articles.
+
 ## Editions
 
 - GET `/editions` Query: `page, pageSize` → paginated list `[ { id, localDate, publishedAt, articleCount } ]`
