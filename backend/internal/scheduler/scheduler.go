@@ -30,6 +30,8 @@ func (s *Scheduler) HourlyFetch(database *sql.DB) error {
 		defer cancel()
 		if err := fetcher.FetchAllSources(ctx, database, nil); err != nil {
 			log.Printf("fetch job error: %v", err)
+		} else {
+			log.Printf("fetch job ok")
 		}
 	})
 	return err
@@ -47,6 +49,8 @@ func (s *Scheduler) DailyAssemble(database *sql.DB, cfg config.Config) error {
 		defer cancel()
 		if err := aggregator.AssembleDailyEdition(ctx, database, loc, now); err != nil {
 			log.Printf("assemble job error: %v", err)
+		} else {
+			log.Printf("assemble job ok for %s", now.Format("2006-01-02"))
 		}
 	})
 	return err

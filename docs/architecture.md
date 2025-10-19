@@ -5,10 +5,12 @@
 - API Server (Go/HTTP)
   - Exposes REST endpoints for sources, editions, articles, read-later, devices, auth.
   - Auth middleware validates device tokens.
+  - Structured JSON logs with request IDs; body size limits; login rate limiting.
 
 - Scheduler
   - Triggers hourly fetch and daily edition assembly.
   - Uses cron-like scheduler; jobs are idempotent.
+  - Emits summary logs for successful/failed runs.
 
 - Fetcher
   - Performs conditional GETs using ETag/Last-Modified.

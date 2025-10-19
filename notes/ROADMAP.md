@@ -81,9 +81,9 @@ Definition of Done: revoked token immediately denied.
 
 ### M9 — Observability and safeguards
 
-- [ ] Structured logging with request ids; job summaries
+- [x] Structured logging with request ids; job summaries
 - [ ] Basic metrics hooks (optional); pprof guarded (optional)
-- [ ] Rate limit login; sane HTTP timeouts; size limits
+- [x] Rate limit login; sane HTTP timeouts; size limits
 
 Definition of Done: logs are actionable; basic DoS mitigations in place.
 

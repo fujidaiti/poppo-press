@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/fujidaiti/poppo-press/backend/internal/config"
 	"github.com/fujidaiti/poppo-press/backend/internal/db"
@@ -39,7 +40,8 @@ func main() {
 	}
 	sch.Start()
 	log.Printf("listening on %s", cfg.HTTPAddr)
-	if err := http.ListenAndServe(cfg.HTTPAddr, srv.Handler()); err != nil {
+	server := &http.Server{Addr: cfg.HTTPAddr, Handler: srv.Handler(), ReadTimeout: 10 * time.Second, WriteTimeout: 15 * time.Second, IdleTimeout: 60 * time.Second}
+	if err := server.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
 }

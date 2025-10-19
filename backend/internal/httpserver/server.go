@@ -6,6 +6,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -31,8 +32,9 @@ func New(database *sql.DB) *Server {
 	r := chi.NewRouter()
 	r.Use(middleware.RealIP)
 	r.Use(middleware.RequestID)
-	r.Use(middleware.Logger)
+	r.Use(jsonLogger)
 	r.Use(middleware.Recoverer)
+	r.Use(limitBody(1 << 20)) // 1MB
 
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
@@ -52,7 +54,9 @@ func New(database *sql.DB) *Server {
 	// v1 routes
 	r.Route("/v1", func(r chi.Router) {
 		r.Route("/auth", func(r chi.Router) {
-			r.Post("/login", func(w http.ResponseWriter, r *http.Request) {
+			// Rate limit login per IP: 5 requests per minute
+			rl := newRateLimiter(5, time.Minute)
+			r.With(rl.Middleware).Post("/login", func(w http.ResponseWriter, r *http.Request) {
 				type req struct{ Username, Password, DeviceName string }
 				var body req
 				if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
