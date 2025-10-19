@@ -55,8 +55,8 @@ Definition of Done: hourly job persists new or updated items without duplicates.
 
 ### M5 — Aggregator and daily edition
 
-- [ ] Assemble daily edition at configured local time (last 24h window)
-- [ ] Idempotent re-runs; attach articles with ordered positions
+- [x] Assemble daily edition at configured local time (last 24h window)
+- [x] Idempotent re-runs; attach articles with ordered positions
 
 Definition of Done: GET `/v1/editions` shows the day’s edition and counts.
 

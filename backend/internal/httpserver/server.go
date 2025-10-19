@@ -104,6 +104,9 @@ func New(database *sql.DB) *Server {
 
 		// M3 Sources API
 		registerSourcesRoutes(database, r)
+
+		// M5 Editions API
+		registerEditionRoutes(database, r)
 	})
 
 	return &Server{mux: r, db: database}

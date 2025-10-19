@@ -34,6 +34,9 @@ func main() {
 	if err := sch.HourlyFetch(database); err != nil {
 		log.Fatal(err)
 	}
+	if err := sch.DailyAssemble(database, cfg); err != nil {
+		log.Fatal(err)
+	}
 	sch.Start()
 	log.Printf("listening on %s", cfg.HTTPAddr)
 	if err := http.ListenAndServe(cfg.HTTPAddr, srv.Handler()); err != nil {

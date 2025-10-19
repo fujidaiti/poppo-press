@@ -22,6 +22,7 @@ Base URL: `/v1`
 ## Scheduler
 
 - Hourly job fetches all sources (conditional GET) and persists new/updated articles.
+- Daily at 08:00 local time, assemble edition from last 24h articles.
 
 ## Editions
 

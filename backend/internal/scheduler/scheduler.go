@@ -8,6 +8,8 @@ import (
 
 	"github.com/robfig/cron/v3"
 
+	"github.com/fujidaiti/poppo-press/backend/internal/aggregator"
+	"github.com/fujidaiti/poppo-press/backend/internal/config"
 	"github.com/fujidaiti/poppo-press/backend/internal/fetcher"
 )
 
@@ -28,6 +30,23 @@ func (s *Scheduler) HourlyFetch(database *sql.DB) error {
 		defer cancel()
 		if err := fetcher.FetchAllSources(ctx, database, nil); err != nil {
 			log.Printf("fetch job error: %v", err)
+		}
+	})
+	return err
+}
+
+func (s *Scheduler) DailyAssemble(database *sql.DB, cfg config.Config) error {
+	loc, err := time.LoadLocation(cfg.Timezone)
+	if err != nil {
+		loc = time.Local
+	}
+	// Run at 08:00 local time
+	_, err = s.c.AddFunc("0 0 8 * *", func() {
+		now := time.Now().In(loc)
+		ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+		defer cancel()
+		if err := aggregator.AssembleDailyEdition(ctx, database, loc, now); err != nil {
+			log.Printf("assemble job error: %v", err)
 		}
 	})
 	return err
