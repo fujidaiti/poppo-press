@@ -2,10 +2,53 @@
 
 Binary name: `pp`
 
+## Conventions
+
+### Command model
+
+- Verbs then nouns for subcommands: `source add`, `source list`, `device revoke`
+- Flags are command-scoped (no global flags); provide short and long where useful
+- Filtering/sorting: not provided; prefer shell post-processing (`grep`, `jq`, etc.)
+
+### Interactivity
+
+- All commands are non-interactive by default
+- Destructive commands may prompt once; use `--force` to bypass
+- No progress bars/spinners; commands are fast and script-friendly
+
+### Output
+
+- Raw by default: no alignment, wrapping, truncation, colors, or pager
+- Include resource IDs (articles, editions) so outputs are reusable in follow-up commands
+
+### Links & IDs
+
+- Display URLs only; the CLI does not open a browser
+- Device names must be unique; duplicates rejected with clear validation error
+
+### Errors & diagnostics
+
+- Clear, actionable error messages with retry hints for rate limits/network failures
+- `--verbose` shows HTTP request/response traces (with secrets redacted when implemented)
+
+### Help
+
+- Rich `--help` with examples for each command
+- No shell completions provided
+
+### Devices & security
+
+- Prompts include the active device label/id when shown
+- Revocation UX: keep device record; on revoke, clear token secret and set `revoked_at`; idempotent second revoke
+
 ## Config
 
 - Config file: `~/.config/poppo-press/config.yaml`
-- Fields: `server`, `token`, `output: { pager, width }`
+- Fields: `server`, `token`, `timezone`, `output: { pager }`
+  - Token storage: saved in `config.yaml`; file perms 600, dir perms 700 (user-only). On Windows, user-only ACL.
+  - Runtime override: `PP_TOKEN` environment variable (not persisted).
+  - Formatting policy: emit original text for post-processing. No alignment, wrapping, truncation, colors, or pager by default.
+  - Timezones: timestamps over HTTP are UTC; `timezone` controls CLI display and date selection defaults. If unset, uses system timezone. Server edition assembly uses server-side timezone.
 
 ## Commands
 
@@ -29,27 +72,32 @@ Resulting config (example):
 ```yaml
 server: http://localhost:8080
 token: ""            # filled by `pp login`
+timezone: ""         # IANA TZ like "Asia/Tokyo"; empty = system default
 output:
   pager: auto
-  width: 80
 ```
 
 ### login
 
 ```console
-pp login
+pp login --device <name> --username <user> --password <pass>
 ```
 
-Prompts for username, password, and a device name. On success, stores the received token in your config file.
+Non-interactive. Requires `--device`, `--username`, and `--password`. On success, stores the received token in your config file.
 If a token already exists, it will be replaced. The device name helps you distinguish tokens across machines.
 
-Example flow:
+Examples:
 
 ```console
-Username: admin
-Password: ********
-Device name: macbook
-Login successful. Token saved.
+$ pp login --device macbook --username admin --password secret
+Login successful. Token saved for device "macbook".
+```
+
+For shell safety, prefer environment variables over inline passwords:
+
+```console
+$ PP_USERNAME=admin PP_PASSWORD=secret pp login --device macbook
+Login successful. Token saved for device "macbook".
 ```
 
 ### source add
@@ -112,14 +160,14 @@ Example output:
 
 ```console
 # Edition 2025-10-19
-1. [Example Feed] Title A (08:12)
-2. [Another Source] Title B (07:55)
+1. 202  [Example Feed] Title A (08:12)
+2. 187  [Another Source] Title B (07:55)
 ```
 
 ### paper list
 
 ```console
-pp paper list [--limit N]
+pp paper list [--limit N] [--offset N]
 ```
 
 Lists recent editions with their article counts. Useful to discover past days.
@@ -151,7 +199,7 @@ Added article 202 to read later
 ### later list
 
 ```console
-pp later list
+pp later list [--limit N] [--offset N]
 ```
 
 Lists articles in your read-later queue.
@@ -208,6 +256,36 @@ Example:
 ```console
 $ pp device revoke 5
 Revoked device id=5
+```
+
+### config tz
+
+```console
+pp config tz
+```
+
+Prints the current CLI timezone setting. Empty means the system timezone is used.
+
+Example:
+
+```console
+$ pp config tz
+Asia/Tokyo
+```
+
+### config tz set
+
+```console
+pp config tz set <IANA-TZ>
+```
+
+Sets the CLI timezone to an IANA identifier (e.g., `America/New_York`). Affects display and date selection defaults.
+
+Example:
+
+```console
+$ pp config tz set Asia/Tokyo
+Timezone set to Asia/Tokyo
 ```
 
 ## Exit Codes
