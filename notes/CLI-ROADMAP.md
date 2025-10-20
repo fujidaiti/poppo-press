@@ -5,9 +5,9 @@ Scope: Non-interactive by default, raw text output, no colors/pager, command-sco
 
 ## C0: Foundations and constraints
 
-- [ ] Lock UX constraints per `docs/cli-ux.md` (raw output, no global flags, no pager/colors)
-- [ ] Decide command framework (prefer `spf13/cobra`, no shell completions enabled)
-- [ ] Directory layout and module strategy (separate Go module under `cli/`)
+- [x] Lock UX constraints per `docs/cli-ux.md` (raw output, no global flags, no pager/colors)
+- [x] Decide command framework: `spf13/cobra` (no shell completions)
+- [x] Directory layout and module strategy: separate Go module under `cli/`
 
 Acceptance:
 
@@ -19,6 +19,7 @@ Acceptance:
 - [ ] Create `cli/cmd/pp/main.go` and internal packages (auth, config, httpc, commands)
 - [ ] Subcommand skeletons: `init`, `login`, `source`, `paper`, `later`, `device`, `config tz`, `config tz set`
 - [ ] Common flag wiring (per-command only)
+- [ ] Build outputs to `cli/build/` (use `go build -o build/pp`)
 
 Acceptance:
 
@@ -138,3 +139,55 @@ Acceptance:
 - [ ] Machine-readable modes (`--json`, `--jsonl`, `--tsv`), `-q/--quiet`, `--fields`
 - [ ] Secure token storage via OS keychain (opt-in)
 - [ ] Advanced device ID generation (random/ULID or app-scoped hash)
+
+---
+
+## Contributor Guide (CLI)
+
+### Setup
+
+- Install Go 1.25+
+- Create a new module under `cli/`: `go mod init github.com/fujidaiti/poppo-press/cli`
+- Use `spf13/cobra` (no shell completions); add other deps as needed
+
+### Build & Run
+
+- From `cli/`: `mkdir -p build && go build -o build/pp ./cmd/pp && ./build/pp --help`
+- Point to local API: `pp init --server http://localhost:8080`
+- Login (non-interactive): `PP_USERNAME=admin PP_PASSWORD=admin pp login --device devbox`
+
+### Tests
+
+- `go test ./...`
+- Golden tests for command outputs; keep outputs raw (no colors/pager)
+
+### UX Constraints
+
+- Non-interactive by default; destructive prompts allow `--force`
+- Command-scoped flags only; no global flags
+- Raw text output; no alignment/wrapping/truncation; no colors; no pager
+- Include IDs; display URLs only; never auto-open a browser
+- Errors must be clear/actionable; `--verbose` prints redacted request/response traces
+- Timezones: server times UTC; CLI displays in configured IANA TZ
+
+### Code Structure
+
+- Commands under `cli/internal/commands/...`
+- Shared packages: `config`, `httpc`, `auth`
+- Keep functions small and explicit; avoid hidden global state
+
+### Branching & PRs
+
+- One milestone or feature per PR; keep diffs small
+- Update `docs/cli-ux.md` if behavior or flags change
+- Update this roadmap as items complete
+
+### Running against backend
+
+- Start backend per `backend/README.md`
+- Use a test DB; don’t commit local data files
+
+### Security
+
+- Never log tokens/passwords; use the redaction helper
+- On revoke, device stays visible; token becomes invalid immediately
