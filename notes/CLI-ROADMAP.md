@@ -69,12 +69,12 @@ Acceptance:
 
 ## C6: Papers (editions)
 
-- [ ] `pp paper read [--date YYYY-MM-DD]` → numbered list with article IDs
-- [ ] `pp paper list [--limit N] [--offset N]` → recent editions with counts
+- [x] `pp paper read [--date YYYY-MM-DD]` → numbered list with article IDs
+- [x] `pp paper list [--limit N] [--offset N]` → recent editions with counts
 
 Acceptance:
 
-- [ ] Dates reflect configured timezone; IDs shown for reuse
+- [x] Dates reflect configured timezone; IDs shown for reuse
 
 ## C7: Read-later
 
