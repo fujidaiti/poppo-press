@@ -89,9 +89,9 @@ Definition of Done: logs are actionable; basic DoS mitigations in place.
 
 ### M10 — Deployment
 
-- [ ] Systemd unit; environment; DB path; timezone; publish time
-- [ ] Backup and restore procedure for SQLite (WAL)
-- [ ] Optional Docker Compose
+- [x] Systemd unit; environment; DB path; timezone; publish time
+- [x] Backup and restore procedure for SQLite (WAL)
+- [x] Optional Docker Compose
 
 Definition of Done: server reliably runs on a host with documented runbook.
 

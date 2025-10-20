@@ -9,3 +9,4 @@ alwaysApply: false
 - ALWAYS update @notes/ROADMAP.md when you done a task.
 - Make sure to update the documentation in @docs/ if needed.
 - DO Test Driven Development; write/update tests before adding/modifying features or fixing bugs.
+- Don't hesitate to remove stale or temporary files or lines of code as we are using Git; Leaving change-log comments like `UPDATED: 2025-10-02` and `~AddNewTask button~ EDIT: this feature has been removed` is also discouraged.
