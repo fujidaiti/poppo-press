@@ -49,13 +49,13 @@ Acceptance:
 
 ## C4: Authentication
 
-- [ ] `pp login --device <name> --username <user> --password <pass>` (non-interactive)
-- [ ] Store token in config; replace if exists
-- [ ] Messages: success, validation errors, auth failures
+- [x] `pp login --device <name> --username <user> --password <pass>` (non-interactive)
+- [x] Store token in config; replace if exists
+- [x] Messages: success, validation errors, auth failures
 
 Acceptance:
 
-- [ ] Login persists token; respects `PP_USERNAME`/`PP_PASSWORD`/`PP_TOKEN`
+- [x] Login persists token; respects `PP_USERNAME`/`PP_PASSWORD`/`PP_TOKEN`
 
 ## C5: Sources
 
