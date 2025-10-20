@@ -59,13 +59,13 @@ Acceptance:
 
 ## C5: Sources
 
-- [ ] `pp source add <url>` → prints created id and title
-- [ ] `pp source list` → raw table of id, title, URL
-- [ ] `pp source rm <id>` → confirms removal (prompt unless `--force`)
+- [x] `pp source add <url>` → prints created id and title
+- [x] `pp source list` → raw table of id, title, URL
+- [x] `pp source rm <id>` → confirms removal (prompt unless `--force`)
 
 Acceptance:
 
-- [ ] Outputs include IDs; no formatting/wrapping beyond raw text
+- [x] Outputs include IDs; no formatting/wrapping beyond raw text
 
 ## C6: Papers (editions)
 
