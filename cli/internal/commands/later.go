@@ -1,6 +1,13 @@
 package commands
 
-import "github.com/spf13/cobra"
+import (
+	"io"
+	"net/http"
+
+	"github.com/fujidaiti/poppo-press/cli/internal/config"
+	"github.com/fujidaiti/poppo-press/cli/internal/httpc"
+	"github.com/spf13/cobra"
+)
 
 func newLaterCmd() *cobra.Command {
 	cmd := &cobra.Command{
@@ -14,13 +21,56 @@ func newLaterCmd() *cobra.Command {
 		Short:   "Add an article to read later",
 		Args:    cobra.ExactArgs(1),
 		Example: "pp later add 202",
-		RunE:    func(cmd *cobra.Command, args []string) error { return nil },
+		RunE: func(cmd *cobra.Command, args []string) error {
+			c, err := config.Load()
+			if err != nil {
+				return err
+			}
+			hc, err := httpc.New(c.Server, c.Token)
+			if err != nil {
+				return err
+			}
+			req, err := hc.NewRequest(cmd.Context(), http.MethodPost, "/v1/read-later/"+args[0], nil)
+			if err != nil {
+				return err
+			}
+			resp, err := hc.Do(req)
+			if err != nil {
+				return err
+			}
+			defer resp.Body.Close()
+			return nil
+		},
 	})
 
 	list := &cobra.Command{
-		Use:     "list",
-		Short:   "List read-later articles",
-		RunE:    func(cmd *cobra.Command, args []string) error { return nil },
+		Use:   "list",
+		Short: "List read-later articles",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			c, err := config.Load()
+			if err != nil {
+				return err
+			}
+			hc, err := httpc.New(c.Server, c.Token)
+			if err != nil {
+				return err
+			}
+			req, err := hc.NewRequest(cmd.Context(), http.MethodGet, "/v1/read-later", nil)
+			if err != nil {
+				return err
+			}
+			resp, err := hc.Do(req)
+			if err != nil {
+				return err
+			}
+			defer resp.Body.Close()
+			b, _ := io.ReadAll(resp.Body)
+			if len(b) > 0 && b[len(b)-1] != '\n' {
+				b = append(b, '\n')
+			}
+			_, _ = cmd.OutOrStdout().Write(b)
+			return nil
+		},
 		Example: "pp later list --limit 10",
 	}
 	list.Flags().Int("limit", 0, "max number of items")
@@ -32,7 +82,26 @@ func newLaterCmd() *cobra.Command {
 		Short:   "Remove an article from read later",
 		Args:    cobra.ExactArgs(1),
 		Example: "pp later rm 202",
-		RunE:    func(cmd *cobra.Command, args []string) error { return nil },
+		RunE: func(cmd *cobra.Command, args []string) error {
+			c, err := config.Load()
+			if err != nil {
+				return err
+			}
+			hc, err := httpc.New(c.Server, c.Token)
+			if err != nil {
+				return err
+			}
+			req, err := hc.NewRequest(cmd.Context(), http.MethodDelete, "/v1/read-later/"+args[0], nil)
+			if err != nil {
+				return err
+			}
+			resp, err := hc.Do(req)
+			if err != nil {
+				return err
+			}
+			defer resp.Body.Close()
+			return nil
+		},
 	})
 
 	return cmd

@@ -78,18 +78,18 @@ Acceptance:
 
 ## C7: Read-later
 
-- [ ] `pp later add <article-id>` (idempotent)
-- [ ] `pp later list [--limit N] [--offset N]`
-- [ ] `pp later rm <article-id>`
+- [x] `pp later add <article-id>` (idempotent)
+- [x] `pp later list [--limit N] [--offset N]`
+- [x] `pp later rm <article-id>`
 
 Acceptance:
 
-- [ ] Messages are clear and raw; exit codes consistent
+- [x] Messages are clear and raw; exit codes consistent
 
 ## C8: Devices
 
-- [ ] `pp device list` (raw list; includes id, name, last seen, revoked status)
-- [ ] `pp device revoke <id>` (idempotent; outcome: revoked/already revoked/not found)
+- [x] `pp device list` (raw list; includes id, name, last seen, revoked status)
+- [x] `pp device revoke <id>` (idempotent; outcome: revoked/already revoked/not found)
 - [ ] Prompts include active device label; `--force` bypasses
 
 Acceptance:
