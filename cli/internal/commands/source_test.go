@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -53,8 +54,8 @@ func TestSource_Add_List_Rm(t *testing.T) {
 	if err := add.Execute(); err != nil {
 		t.Fatalf("add: %v; out=%s", err, out.String())
 	}
-	if got := out.String(); got == "" {
-		t.Fatalf("expected output with created id, got empty")
+	if got := strings.TrimSpace(out.String()); got != "42" {
+		t.Fatalf("expected created id '42', got %q", got)
 	}
 
 	// list
@@ -65,8 +66,8 @@ func TestSource_Add_List_Rm(t *testing.T) {
 	if err := ls.Execute(); err != nil {
 		t.Fatalf("list: %v; out=%s", err, out.String())
 	}
-	if got := out.String(); got == "" {
-		t.Fatalf("expected non-empty list output")
+	if !strings.Contains(out.String(), "\"id\":42") {
+		t.Fatalf("expected raw json array containing id 42, got %s", out.String())
 	}
 
 	// rm

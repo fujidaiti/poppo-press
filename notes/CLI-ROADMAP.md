@@ -98,21 +98,21 @@ Acceptance:
 
 ## C9: Pagination and selection
 
-- [ ] Add per-command `--limit` and `--offset` where applicable (paper list, later list)
-- [ ] Keep flags command-scoped; no global pagination flags
+- [x] Add per-command `--limit` and `--offset` where applicable (paper list, later list)
+- [x] Keep flags command-scoped; no global pagination flags
 
 Acceptance:
 
-- [ ] Pagination works; defaults documented in `--help`
+- [x] Pagination works; defaults documented in `--help`
 
 ## C10: Errors and diagnostics polish
 
-- [ ] Central error formatter with retry hints for rate limits/network issues
-- [ ] Redaction utility for logs/traces (tokens, passwords)
+- [x] Central error formatter with retry hints for rate limits/network issues
+- [x] Redaction utility for logs/traces (tokens, passwords)
 
 Acceptance:
 
-- [ ] Representative failures show actionable messages and correct exit codes
+- [x] Representative failures show actionable messages and correct exit codes
 
 ## C11: Testing
 

@@ -20,6 +20,7 @@ func newSourceCmd() *cobra.Command {
 		Short: "Manage sources",
 		Long:  "Manage sources",
 	}
+	cmd.PersistentFlags().Bool("verbose", false, "print HTTP request/response traces")
 
 	cmd.AddCommand(&cobra.Command{
 		Use:     "add <url>",
@@ -31,7 +32,13 @@ func newSourceCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			hc, err := httpc.New(c.Server, c.Token)
+			verbose, _ := cmd.Flags().GetBool("verbose")
+			var hc *httpc.Client
+			if verbose {
+				hc, err = httpc.New(c.Server, c.Token, httpc.WithVerbose(cmd.ErrOrStderr()))
+			} else {
+				hc, err = httpc.New(c.Server, c.Token)
+			}
 			if err != nil {
 				return err
 			}
@@ -65,7 +72,13 @@ func newSourceCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			hc, err := httpc.New(c.Server, c.Token)
+			verbose, _ := cmd.Flags().GetBool("verbose")
+			var hc *httpc.Client
+			if verbose {
+				hc, err = httpc.New(c.Server, c.Token, httpc.WithVerbose(cmd.ErrOrStderr()))
+			} else {
+				hc, err = httpc.New(c.Server, c.Token)
+			}
 			if err != nil {
 				return err
 			}
@@ -98,7 +111,13 @@ func newSourceCmd() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			hc, err := httpc.New(c.Server, c.Token)
+			verbose, _ := cmd.Flags().GetBool("verbose")
+			var hc *httpc.Client
+			if verbose {
+				hc, err = httpc.New(c.Server, c.Token, httpc.WithVerbose(cmd.ErrOrStderr()))
+			} else {
+				hc, err = httpc.New(c.Server, c.Token)
+			}
 			if err != nil {
 				return err
 			}
