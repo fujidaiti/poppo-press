@@ -11,8 +11,8 @@ Scope: Non-interactive by default, raw text output, no colors/pager, command-sco
 
 Acceptance:
 
-- [ ] `cli/` contains `go.mod` and `main` wiring with root command
-- [ ] `pp --help` prints grouped help; no completion commands shown
+- [x] `cli/` contains `go.mod` and `main` wiring with root command
+- [x] `pp --help` prints grouped help; no completion commands shown
 
 ## C1: Project scaffold
 
