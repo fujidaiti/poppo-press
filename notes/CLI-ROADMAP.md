@@ -27,14 +27,14 @@ Acceptance:
 
 ## C2: Config and filesystem
 
-- [ ] Read/write YAML at `~/.config/poppo-press/config.yaml` (Linux/macOS) and `%APPDATA%/Poppo Press/config.yaml` (Windows)
-- [ ] Fields: `server`, `token`, `timezone`, `output: { pager }`
-- [ ] File perms: 600; dir perms: 700 (Windows: user-only ACL)
-- [ ] Commands: `pp init --server <url>`, `pp config tz`, `pp config tz set <IANA-TZ>`
+- [x] Read/write YAML at `~/.config/poppo-press/config.yaml` (Linux/macOS) and `%APPDATA%/Poppo Press/config.yaml` (Windows)
+- [x] Fields: `server`, `token`, `timezone`, `output: { pager }`
+- [x] File perms: 600; dir perms: 700 (Windows: user-only ACL)
+- [x] Commands: `pp init --server <url>`, `pp config tz`, `pp config tz set <IANA-TZ>`
 
 Acceptance:
 
-- [ ] Init writes config with correct perms; tz commands get/set properly
+- [x] Init writes config with correct perms; tz commands get/set properly
 
 ## C3: HTTP client
 

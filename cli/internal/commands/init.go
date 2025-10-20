@@ -1,6 +1,9 @@
 package commands
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/fujidaiti/poppo-press/cli/internal/config"
+	"github.com/spf13/cobra"
+)
 
 func newInitCmd() *cobra.Command {
 	cmd := &cobra.Command{
@@ -8,7 +11,9 @@ func newInitCmd() *cobra.Command {
 		Short: "Initialize CLI configuration",
 		Long:  "Initialize CLI configuration",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return nil
+			server, _ := cmd.Flags().GetString("server")
+			c := &config.Config{Server: server, Output: config.Output{Pager: "auto"}}
+			return config.Save(c)
 		},
 		Example: "pp init --server http://localhost:8080",
 	}
