@@ -8,5 +8,6 @@ alwaysApply: false
 - ALWAYS add Go doc-comments to all functions, structs, types, and other code elements; Make sure to focus on porpose and behavior, not implementation details.
 - ALWAYS update @notes/ROADMAP.md when you done a task.
 - Make sure to update the documentation in @docs/ if needed.
+- Make sure the documents in @docs/ contain only design-level specifications; do not include implementation details.
 - DO Test Driven Development; write/update tests before adding/modifying features or fixing bugs.
 - Don't hesitate to remove stale or temporary files or lines of code as we are using Git; Leaving change-log comments like `UPDATED: 2025-10-02` and `~AddNewTask button~ EDIT: this feature has been removed` is also discouraged.
