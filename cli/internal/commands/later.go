@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"encoding/json"
 	"io"
 	"net/http"
 
@@ -65,6 +66,28 @@ func newLaterCmd() *cobra.Command {
 			}
 			defer resp.Body.Close()
 			b, _ := io.ReadAll(resp.Body)
+			// apply client-side pagination if flags present
+			limit, _ := cmd.Flags().GetInt("limit")
+			offset, _ := cmd.Flags().GetInt("offset")
+			if limit > 0 || offset > 0 {
+				var items []map[string]any
+				if err := json.Unmarshal(b, &items); err == nil {
+					if offset < 0 {
+						offset = 0
+					}
+					if offset > len(items) {
+						offset = len(items)
+					}
+					end := len(items)
+					if limit > 0 && offset+limit < end {
+						end = offset + limit
+					}
+					items = items[offset:end]
+					if enc, err := json.Marshal(items); err == nil {
+						b = enc
+					}
+				}
+			}
 			if len(b) > 0 && b[len(b)-1] != '\n' {
 				b = append(b, '\n')
 			}

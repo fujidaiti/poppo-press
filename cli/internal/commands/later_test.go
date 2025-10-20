@@ -15,7 +15,7 @@ func TestLater_Add_List_Rm(t *testing.T) {
 			return
 		case r.Method == http.MethodGet && r.URL.Path == "/v1/read-later":
 			w.Header().Set("Content-Type", "application/json")
-			_, _ = w.Write([]byte(`[{"id":"202","title":"A"}]`))
+			_, _ = w.Write([]byte(`[{"id":"201"},{"id":"202"},{"id":"203"}]`))
 			return
 		case r.Method == http.MethodDelete && r.URL.Path == "/v1/read-later/202":
 			w.WriteHeader(http.StatusNoContent)
@@ -48,7 +48,7 @@ func TestLater_Add_List_Rm(t *testing.T) {
 	var out bytes.Buffer
 	ls := NewRootCmd()
 	ls.SetOut(&out)
-	ls.SetArgs([]string{"later", "list"})
+	ls.SetArgs([]string{"later", "list", "--limit", "1", "--offset", "1"})
 	if err := ls.Execute(); err != nil {
 		t.Fatalf("later list: %v; out=%s", err, out.String())
 	}
