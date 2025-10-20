@@ -38,14 +38,14 @@ Acceptance:
 
 ## C3: HTTP client
 
-- [ ] Base URL from config; bearer token injection
-- [ ] Timeouts and sensible defaults
-- [ ] `--verbose` outputs redacted request/response traces
-- [ ] Exit codes: 0 success; 1 generic; 2 validation; 3 auth; 4 network
+- [x] Base URL from config; bearer token injection
+- [x] Timeouts and sensible defaults
+- [x] `--verbose` outputs redacted request/response traces
+- [x] Exit codes: 0 success; 1 generic; 2 validation; 3 auth; 4 network
 
 Acceptance:
 
-- [ ] Network/HTTP errors map to documented exit codes; `--verbose` works
+- [x] Network/HTTP errors map to documented exit codes; `--verbose` works
 
 ## C4: Authentication
 
