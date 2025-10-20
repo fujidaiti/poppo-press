@@ -32,5 +32,14 @@ Flags:
 {{.LocalFlags.FlagUsages | trimTrailingWhitespaces}}
 `)
 
+	// Attach skeleton subcommands (verbs/nouns as per UX)
+	root.AddCommand(newInitCmd())
+	root.AddCommand(newLoginCmd())
+	root.AddCommand(newSourceCmd())
+	root.AddCommand(newPaperCmd())
+	root.AddCommand(newLaterCmd())
+	root.AddCommand(newDeviceCmd())
+	root.AddCommand(newConfigCmd())
+
 	return root
 }

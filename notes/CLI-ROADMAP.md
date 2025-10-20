@@ -16,8 +16,8 @@ Acceptance:
 
 ## C1: Project scaffold
 
-- [ ] Create `cli/cmd/pp/main.go` and internal packages (auth, config, httpc, commands)
-- [ ] Subcommand skeletons: `init`, `login`, `source`, `paper`, `later`, `device`, `config tz`, `config tz set`
+- [x] Create `cli/cmd/pp/main.go` and internal packages (auth, config, httpc, commands)
+- [x] Subcommand skeletons: `init`, `login`, `source`, `paper`, `later`, `device`, `config tz`, `config tz set`
 - [ ] Common flag wiring (per-command only)
 - [ ] Build outputs to `cli/build/` (use `go build -o build/pp`)
 
