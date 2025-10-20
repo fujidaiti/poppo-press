@@ -12,6 +12,7 @@ import (
 	"time"
 )
 
+// Option configures a Client instance.
 type Option func(*Client)
 
 // WithTimeout sets the HTTP client timeout.
@@ -21,14 +22,18 @@ func WithTimeout(d time.Duration) Option { return func(c *Client) { c.http.Timeo
 func WithVerbose(w io.Writer) Option { return func(c *Client) { c.verbose = w } }
 
 // Error represents an operation error with a mapped exit code per CLI policy.
+// Error represents an operation error with a mapped exit code per CLI policy.
+// For HTTP errors, Status will be non-zero.
 type Error struct {
-	Code int   // 0 ok; 1 generic; 2 validation; 3 auth; 4 network
-	Err  error // underlying error
+	Code   int   // 0 success; 1 generic; 2 validation; 3 auth; 4 network
+	Status int   // HTTP status if applicable (non-zero for HTTP responses)
+	Err    error // underlying error
 }
 
 func (e *Error) Error() string { return e.Err.Error() }
 func (e *Error) Unwrap() error { return e.Err }
 
+// Client is a small HTTP helper with base URL, token injection and tracing.
 type Client struct {
 	base    *url.URL
 	token   string
@@ -94,7 +99,7 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	if msg == "" {
 		msg = resp.Status
 	}
-	return nil, &Error{Code: code, Err: errors.New(msg)}
+	return nil, &Error{Code: code, Status: resp.StatusCode, Err: errors.New(msg)}
 }
 
 func mapStatusToExitCode(status int) int {
@@ -103,6 +108,8 @@ func mapStatusToExitCode(status int) int {
 		return 2
 	case 401, 403:
 		return 3
+	case 429:
+		return 1
 	default:
 		if status >= 500 {
 			return 1
